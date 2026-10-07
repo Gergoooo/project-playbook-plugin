@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Scans staged changes for secrets before allowing a commit.
+set -uo pipefail
+
+if ! command -v gitleaks >/dev/null 2>&1; then
+  echo "Warning: gitleaks not installed, skipping secret scan. Install with: brew install gitleaks" >&2
+  exit 0
+fi
+
+if ! gitleaks protect --staged --redact -v; then
+  echo "" >&2
+  echo "gitleaks found a potential secret in staged changes. Fix or unstage it before committing." >&2
+  echo "False positive? Add a rule to .gitleaks.toml. Last resort: git commit --no-verify" >&2
+  exit 1
+fi
+
+exit 0

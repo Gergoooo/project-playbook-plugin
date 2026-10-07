@@ -1,0 +1,12 @@
+{
+  "name": "gergo-playbook",
+  "description": "Gergo's Claude Code plugins",
+  "owner": { "name": "Gergoooo" },
+  "plugins": [
+    {
+      "name": "project-playbook",
+      "source": "./",
+      "description": "Docs-first project setup playbook with scaffold + resume commands."
+    }
+  ]
+}

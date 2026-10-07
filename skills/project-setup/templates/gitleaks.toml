@@ -1,0 +1,8 @@
+# gitleaks 8.30+: singular [allowlist] table, not [[allowlist]].
+# Document WHY each entry is safe; don't blanket-suppress.
+[extend]
+useDefault = true
+
+# [allowlist]
+# description = "Confirmed false positives"
+# regexes = ['''<pattern>''']  # why: <reason>
