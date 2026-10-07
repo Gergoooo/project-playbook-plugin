@@ -7,6 +7,8 @@ description: Docs-first process for bootstrapping a new software project with Cl
 
 Process for going from first conversation to "modules landing via a dual-builder pipeline." Follow roughly in order; skip steps that don't apply. Read only the reference file for the step you are on.
 
+**Not every project needs every step.** Choose Solo / Small app / Full pipeline first (`references/right-size.md`); it says which steps to skip. Assumes GitHub + `gh` and Claude Code.
+
 ## Standing rules (always)
 - **Docs before code.** No application code until the docs in `references/docs.md` exist.
 - **User decides at every module/phase boundary.** Each module = one PR into `dev`; the user's merge is the gate. Never auto-proceed.
@@ -17,7 +19,7 @@ Process for going from first conversation to "modules landing via a dual-builder
 ## Steps
 | # | Step | Read |
 |---|---|---|
-| 0 | Scope the idea (plan mode) | `references/scoping.md` |
+| 0 | Scope the idea (plan mode) **and pick a tier** | `references/scoping.md`, `references/right-size.md` |
 | 1 | Docs before code (+ `Current status` block in ROADMAP) | `references/docs.md` |
 | 2–3 | Repo setup, `.gitignore` | `references/repo-setup.md` |
 | 4 | Full review pass before code | `references/review-pass.md` |
