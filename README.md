@@ -9,6 +9,6 @@ Claude Code plugin: a docs-first project setup playbook.
 ## Install
 ```
 /plugin marketplace add Gergoooo/project-playbook-plugin
-/plugin install project-playbook@gergo-playbook
+/plugin install project-playbook@project-setup-playbook
 ```
 Local dev: `claude --plugin-dir /path/to/project-playbook-plugin`.

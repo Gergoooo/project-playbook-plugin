@@ -1,6 +1,6 @@
 {
-  "name": "gergo-playbook",
-  "description": "Gergo's Claude Code plugins",
+  "name": "project-setup-playbook",
+  "description": "Docs-first project setup playbook for Claude Code",
   "owner": { "name": "Gergoooo" },
   "plugins": [
     {
