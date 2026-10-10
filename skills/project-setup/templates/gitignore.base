@@ -1,0 +1,6 @@
+# Secrets — patterns are CONFIRMED WITH THE USER before being written here. Never add unprompted.
+# <confirmed secret patterns go here, e.g. .env, .env.*, *.pem, *.key>
+
+# Build noise (safe to add without asking) — keep only what matches the stack
+.DS_Store
+# <node_modules/ __pycache__/ .venv/ target/ build/ dist/ DerivedData/ ...>

@@ -1,0 +1,17 @@
+name: CI
+# Template: replace the setup + test steps with the project's real toolchain.
+# Runs on PRs into dev and main; does NOT build/publish/deploy (that's a separate
+# workflow triggered on push to main only — see docs/WORKFLOW.md branching model).
+on:
+  pull_request:
+    branches: [dev, main]
+  workflow_dispatch: {}
+jobs:
+  test:
+    runs-on: ubuntu-latest   # use macos-latest for Apple-platform builds
+    steps:
+      - uses: actions/checkout@v4
+      # - <setup-node | setup-python | setup-go | setup-java | xcode-select ...>
+      # - run: <install deps>
+      # - run: <lint / type-check>
+      - run: echo "replace with the real test command from docs/TESTING.md"

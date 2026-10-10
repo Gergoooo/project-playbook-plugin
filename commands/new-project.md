@@ -1,18 +1,29 @@
 ---
-description: Scaffold a new project using the docs-first playbook (scoping → docs → repo hygiene → module pipeline)
-argument-hint: "[short project idea]"
+description: Scaffold any new project with the docs-first playbook (scoping → docs → repo hygiene → roadmap modules → agents/hooks)
+argument-hint: "<project idea> [--auto]"
 ---
 
 Use the `project-setup` skill to set up a new project: $ARGUMENTS
 
-Work through the skill's steps in order, reading only the reference file for the current step.
+Works for any kind of project (app, service, CLI, library, data/ML, game, embedded, infra). Do not assume a stack — derive everything from the idea and the user's answers. Read `references/adapt.md` first, then only the reference file for the step you are on.
 
-1. **Scope (step 0):** enter plan mode, interrogate the idea, ask which tier (see `references/right-size.md`) and skip steps accordingly, give recommendations with tradeoffs, record constraints (budget, privacy, solo/team, timeline).
-2. **Docs (step 1):** create the docs from `templates/` (ROADMAP with `## Current status`, WORKFLOW, DECISIONS, plus README/ARCHITECTURE/DATA_MODEL/TESTING and `API.md` if client/server). No application code yet.
-3. **Repo (steps 2–3, 6):** confirm repo layout and names with the user before `git init`/`gh repo create`. Create `dev`. Propose exact `.gitignore` secret patterns and **wait for explicit confirmation**; add plain build-noise without asking.
-4. **Review pass (step 4)** against the checklist; write findings into DECISIONS.
-5. **Modules (step 5):** break ROADMAP into modules with Scope / Depends on / Group / Test plan.
-6. **Failsafes (step 9):** copy `templates/CLAUDE.md` (fill the stack), `templates/githooks/*` to `.githooks/`, `gitleaks.toml` to `.gitleaks.toml`; run `git config core.hooksPath .githooks`; test that a direct push to `main`/`dev` is blocked.
-7. **Agents (step 7):** copy `templates/agents/module-verifier.md`; write stack-specific builder and tester agents.
+## Modes
+- **Interactive (default):** enter plan mode for step 0, ask the user (AskUserQuestion) for the decisions that are genuinely theirs, recommend one option with the tradeoff, and stop at each human gate below.
+- **`--auto`:** no questions. Take your own recommendation for every decision and record each as an assumption in `docs/DECISIONS.md` under "Assumptions (auto mode)". Work in the current directory (create the repo dir(s) as subdirectories). **Local only**: `git init` yes; never run `gh repo create`, never add a remote, never push. Secret-related `.gitignore` patterns are still written but listed in DECISIONS as "proposed — needs user confirmation". Used for dry runs and tests.
 
-Stop and ask at each of: repo creation/push, `.gitignore` secret patterns, and the end of every step that changes remote state. Never start a module — that is the user's decision after the setup PR merges.
+## Steps
+1. **Scope (step 0):** restate the idea, list features, constraints (budget, privacy/legal, solo/team, timeline, distribution), pick the **tier** (`references/right-size.md`) and **project type** (`references/adapt.md`). Decide repo count/layout.
+2. **Docs (step 1):** from `templates/`, create the docs the project type needs — README, ARCHITECTURE, ROADMAP (with `## Current status`), DECISIONS (Context/Decision/Why, newest first + Open questions), TESTING, WORKFLOW, `features/` (README + one doc per feature), and conditionally API, DATA_MODEL, ATTRIBUTIONS, DEPLOYMENT. Fill them with real, project-specific content — no leftover `<placeholders>`. No application code.
+3. **Repo (steps 2–3, 6):** `git init`, create `dev` branch, local identity if unset. Write `.gitignore` (stack build-noise freely; secret patterns confirmed with the user or flagged in auto mode). Interactive: confirm names, then create private repo(s) with `gh`.
+4. **Review pass (step 4):** go through every checklist item in `references/review-pass.md`; each becomes a DECISIONS entry or an explicit "n/a — reason". Open questions go in DECISIONS' Open questions.
+5. **Modules (step 5):** write ROADMAP phases → groups → module tables with Scope / Depends on / Test plan columns. Phase 0 = skeleton, CI, and (if hosted) hosting + secrets + auth. Every feature gets modules. Link each phase to its feature doc. Note account prerequisites inline on the row that needs them.
+6. **Failsafes (step 9):** `CLAUDE.md` from the template (stack filled in, Resume protocol verbatim, local setup), `.githooks/pre-push` + `pre-commit` (executable), `.gitleaks.toml`, `git config core.hooksPath .githooks`, CI workflow from `templates/github-workflows/ci.yml` with the real toolchain. Verify a direct push to `main`/`dev` is blocked (local test against a bare temp remote is fine).
+7. **Agents (step 7):** `.claude/agents/` (if writes to `.claude/` are denied in a non-interactive session, write them to `agents-pending/` and say so in the final report — never skip them) — instantiate builder + tester per stack from the templates, plus `module-verifier`. Tier "Solo script" skips agents.
+8. **Consistency + self-verify:** re-read the docs once for agreement (names, endpoints, tables, module ids, tier). Then run `python3 <skill dir>/scripts/verify.py <project root> --expect <docs you decided to include, e.g. api,data_model,ci,features; add tier:solo for the solo tier>` and fix every failing item, then re-run until it passes or the failure is a deliberate omission you record in DECISIONS.
+9. **Commit** the scaffold on a docs branch (not `main`/`dev` directly if a remote exists); in auto mode commit locally.
+
+## Gates (interactive mode)
+Stop and ask before: repo creation/push, `.gitignore` secret patterns, anything outside the project directory. Never start a module — that is the user's decision after the setup PR merges.
+
+## Final report
+List: project type + tier chosen, files created, assumptions made (auto), open questions, and the first module that would be next.

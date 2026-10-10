@@ -30,11 +30,12 @@ Process for going from first conversation to "modules landing via a dual-builder
 | 10 | Sourcing skills/plugins | `references/skills-sourcing.md` |
 | 11 | Save durable lessons | `references/memory.md` |
 
-## Templates (`templates/`)
-- `CLAUDE.md` — repo CLAUDE.md with the Resume protocol block
-- `ROADMAP.md`, `WORKFLOW.md`, `DECISIONS.md` — doc skeletons
-- `githooks/pre-push`, `githooks/pre-commit` — block direct pushes to `main`/`dev`; gitleaks scan
-- `gitleaks.toml` — allowlist skeleton
-- `agents/module-verifier.md` — read-only verifier agent (builder/tester agents are stack-specific; write them per step 7)
+Start with `references/adapt.md` (fit the scaffold to the project type) and `references/right-size.md`.
 
-Replace `<placeholders>` when copying. Commands: `/project-playbook:new-project` scaffolds; `/project-playbook:resume` reports status.
+## Templates (`templates/`)
+- Docs: `README.md`, `ARCHITECTURE.md`, `API.md`*, `DATA_MODEL.md`*, `ROADMAP.md`, `DECISIONS.md`, `TESTING.md`, `WORKFLOW.md`, `ATTRIBUTIONS.md`*, `DEPLOYMENT.md`*, `features/` (*conditional on project type)
+- `CLAUDE.md` — repo CLAUDE.md with the Resume protocol block
+- `githooks/pre-push`, `githooks/pre-commit`, `gitleaks.toml`, `gitignore.base`, `github-workflows/ci.yml`
+- `agents/module-builder.md`, `module-tester.md` (instantiate per stack), `module-verifier.md`
+
+Replace every `<placeholder>` when copying. Commands: `/project-playbook:new-project [--auto]` scaffolds; `/project-playbook:resume` reports status.
