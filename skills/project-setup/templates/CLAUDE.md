@@ -4,12 +4,14 @@
 
 ## Resume protocol
 
-> **On session start (and after `/init`):** read `docs/ROADMAP.md` → `## Current status`. Report in ≤5 lines: last merged module, in-flight work (verify with `gh pr list`, `git branch -r`, `git status`), and **Next up**. Then wait — never auto-start the next module; the user's PR merge is the gate.
+> **On session start (and after `/init`):** read `docs/ROADMAP.md` → `## Current status`. Report in ≤5 lines: last merged module, in-flight work, whether the current epic is complete (epic gate: what's missing) (verify with `gh pr list`, `git branch -r`, `git status`), and **Next up**. Then wait — never auto-start the next module; the user's PR merge is the gate.
 
 ## Standing rules
 - **User decides at every module/phase boundary.** Never auto-proceed past one without explicit sign-off.
 - **Ask before adding anything to `.gitignore`** that isn't obviously build-noise — secret-related patterns need explicit confirmation.
 - Do not push directly to `main`, `dev` or `epic/*`. Modules → PR into `dev` (or into their `epic/<name>` branch if the roadmap phase names one; the epic → `dev` PR is a separate approval); `dev` → `main` only via a deliberate promotion PR.
+
+- **Epic gate:** don't start a story from epic N+1 until every earlier required epic is complete. Run `/project-playbook:next-epic` (`scripts/epic-gate.py . --start N`); if it reports anything missing, warn the user and list it. Only the user can override.
 
 ## Stack
 <stack and one-line rationale; details in docs/DECISIONS.md>

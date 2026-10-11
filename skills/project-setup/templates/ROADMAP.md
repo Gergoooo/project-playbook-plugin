@@ -9,6 +9,8 @@ Living checklist, split into parallel-safe modules — see [WORKFLOW.md](WORKFLO
 
 > Update this block in every module PR.
 
+> **Epic gate:** a phase (epic) is complete only when all its stories are ✅ (no TBD/unverified caveats), tests green, feature doc `**Status**: Done`, no leftover branches/open PRs, epic PR merged (if used). Mark finished stories with ✅ in the first cell. Optional phases: put `(optional)` in the heading.
+
 ## Phase -1 — Docs first
 - [ ] README.md
 - [ ] docs/ARCHITECTURE.md · API.md · DATA_MODEL.md (where applicable)

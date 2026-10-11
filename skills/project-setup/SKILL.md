@@ -11,6 +11,7 @@ Process for going from first conversation to "modules landing via a dual-builder
 
 ## Standing rules (always)
 - **Docs before code.** No application code until the docs in `references/docs.md` exist.
+- **Epic gate:** the next epic starts only when the current one is fully done; otherwise warn and list what's missing (`/project-playbook:next-epic`).
 - **User decides at every module/phase boundary.** Each module = one PR into `dev`; the user's merge is the gate. Never auto-proceed.
 - **Ask before adding anything secret-related to `.gitignore`** — propose exact patterns, get confirmation.
 - Verify subagent claims yourself (or via `module-verifier`); never relay "tests passed" unchecked.
@@ -38,4 +39,4 @@ Start with `references/adapt.md` (fit the scaffold to the project type) and `ref
 - `githooks/pre-push`, `githooks/pre-commit`, `gitleaks.toml`, `gitignore.base`, `github-workflows/ci.yml`
 - `agents/module-builder.md`, `module-tester.md` (instantiate per stack), `module-verifier.md`
 
-Replace every `<placeholder>` when copying. Commands: `/project-playbook:new-project [--auto]` scaffolds; `/project-playbook:resume` reports status.
+Replace every `<placeholder>` when copying. Commands: `/project-playbook:new-project [--auto]` scaffolds; `/project-playbook:resume` reports status; `/project-playbook:next-epic [N]` runs the epic completion gate (`scripts/epic-gate.py`).

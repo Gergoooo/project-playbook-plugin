@@ -11,3 +11,6 @@
 - Every `Depends on` points to an earlier group (no forward or circular deps).
 - Every feature from scoping has at least one module and a feature doc.
 - Every module's Test plan names a concrete check, not "tests".
+
+## Epic definition of done (the gate)
+An epic (phase) is done only when: every story row is ✅ with no TBD/unverified caveat; the epic's test plan is green (verifier output); its feature doc says `**Status**: Done`; no `module/<id>-*` branches or PRs remain open; if it uses an epic branch, the epic PR is merged into `dev`; no DECISIONS open question mentions its stories. Enforced by `scripts/epic-gate.py` / `/project-playbook:next-epic` — warn and list what's missing, never auto-advance, user-only override logged in DECISIONS.

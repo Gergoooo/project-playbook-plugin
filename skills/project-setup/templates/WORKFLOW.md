@@ -10,6 +10,8 @@ How each phase in [ROADMAP.md](ROADMAP.md) gets built.
 5. **User decides, every time.** After a module's tests pass it is presented, not merged or built on. Nothing proceeds automatically — at module level or phase level.
 6. **Each module is one PR against `dev`, not `main`.** CI must pass before it's presentable. The user's PR approval and merge is the decision gate. Every module PR also updates `ROADMAP.md`'s `## Current status`.
 
+7. **Epic completion gate.** The next epic (phase) only starts when every earlier required epic is complete: all stories merged and marked ✅ with no unresolved caveats, the epic's test plan green, its feature doc marked `**Status**: Done`, no leftover `module/*` branches or open PRs, the epic PR merged into `dev` (if an epic branch is used), and no open question in DECISIONS that mentions its stories. Check with `/project-playbook:next-epic` (or `scripts/epic-gate.py`). If anything is missing, warn and list it; don't start the next epic. Only the user can override, and the override is logged in DECISIONS. Mark optional/stretch phases `(optional)` in their heading so they don't block.
+
 ## Branching model
 - **`dev`** — integration branch; every module PR merges here.
 - **`main`** — stable/deployed; advances only via a deliberate `dev`→`main` promotion PR, decided independently of any module. Publish/deploy workflows trigger on `main` only.
