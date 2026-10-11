@@ -14,3 +14,5 @@
 
 ## Epic definition of done (the gate)
 An epic (phase) is done only when: every story row is ✅ with no TBD/unverified caveat; the epic's test plan is green (verifier output); its feature doc says `**Status**: Done`; no `module/<id>-*` branches or PRs remain open; if it uses an epic branch, the epic PR is merged into `dev`; no DECISIONS open question mentions its stories. Enforced by `scripts/epic-gate.py` / `/project-playbook:next-epic` — warn and list what's missing, never auto-advance, user-only override logged in DECISIONS.
+
+Optional roadmap column/marker: `Size: S|M|L` per story. If absent, the orchestrator estimates it at dispatch. Sizing and slicing rules: `subagents.md` → "Scaling agents to task size".

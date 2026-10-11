@@ -33,3 +33,21 @@ Things that didn't show up until subagents were dispatched for real — check fo
 - **Tooling the agent assumes exists may not be installed in its sandbox** (Docker, a project generator or SDK, a specific interpreter version). Instruct agents explicitly: if a required tool is missing, say so plainly and use the closest available proxy to still validate what you can (e.g. run the containerized app's exact install/serve commands directly, outside Docker, if Docker itself isn't available) — never claim a result you didn't actually get. Carry that caveat through to synthesis and the PR description rather than losing it; flag the module in `ROADMAP.md` (e.g. "merged but unverified against real Docker — confirm before relying on it") until someone actually runs the real check.
 - **Verify claims yourself at synthesis time, don't just relay them.** A builder or tester reporting "tests passed" is a claim, not proof — re-run the test suite yourself (or via `module-verifier`) against the synthesized branch before presenting it to the user. This caught nothing dramatic in practice, but it's the actual point of having a separate verification step at all.
 - **Clean up after merge, on both remote and local.** Losing candidate branches, the tester's standalone branch, and the synthesis branch all need deleting after the PR merges (`git push origin --delete <branch>`, then locally `git branch -D <branch>` — plus `git worktree remove --force` for any manually-created worktrees). Easy to let these pile up across several modules; do a `gh pr list --state all` + `git branch -r` sweep periodically to catch what got missed.
+
+## Scaling agents to task size (slices)
+
+Don't use the same agent set for every module. The orchestrator sizes each story when it is dispatched (or the roadmap row carries `Size: S/M/L`):
+
+| Size | Signal | Agents |
+|---|---|---|
+| **S** | ≤3 files, one concern, mechanical | 1 builder + tester + verifier |
+| **M** | one layer/dir, real design choices | 2 competing builders + tester + verifier (the standard pipeline) |
+| **L** | >~8 files, or spans layers/dirs, or expected >~600 changed lines | split into **slices**: 2–5 builders in parallel, each owning a disjoint part of the module's scope |
+
+**Slicing rules (L stories)**
+1. The orchestrator writes the slicing plan *before* dispatching: slice id (`s1`…`sk`), the exact files/dirs each owns (no overlap), and a short **slice contract** — the interfaces, types, endpoints or file formats slices share — committed first on `module/<id>-int` so every slice builds against the same contract.
+2. One builder per slice on `module/<id>-s<k>`, forked from the integration branch. In the Full tier a slice may still get two competing builders if it contains a real design decision (data model, auth, sync); otherwise one.
+3. Tester: one per slice if slices have separate specs, otherwise one tester for the whole module writing contract-level tests from the spec only.
+4. The orchestrator merges slices into `module/<id>-int` in dependency order, resolves seams, and runs the tester's suite; then `module-verifier` runs on the integrated branch. One PR from the integration branch — the user's approval is still the gate.
+5. Cap parallelism at ~6 agents at once; queue the rest. Report agent count and slices in the PR so the cost is visible.
+6. If a slice needs a file outside its scope, it stops and reports; the orchestrator re-slices — never let slices edit each other's files.

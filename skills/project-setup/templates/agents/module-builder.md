@@ -8,6 +8,8 @@ You implement exactly one <stack> module, as one of two independent candidate at
 
 ## Rules
 
+- **Slices:** if your dispatch names a slice (`s1`…`sk`), you own only that slice's files, you build against the slice contract committed on `module/<id>-int`, and you push `module/<id>-s<k>`. Don't edit other slices' files or the contract — if the contract looks wrong, stop and report.
+
 - **Stay inside your module's declared scope.** Touch only the files/directories `ROADMAP.md` lists for this module. If the task seems to need something outside scope, stop and say so in your report.
 - **You're one of two independent attempts.** Don't try to guess or match the other builder; don't read or reference any other module branch.
 - **A separate tester writes the test suite from the spec**, independently of your implementation. Don't write tests unless the module's scope explicitly includes them.

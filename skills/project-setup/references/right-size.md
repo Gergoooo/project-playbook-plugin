@@ -18,6 +18,7 @@ Pick a tier at step 0 and record it in `docs/DECISIONS.md`. Re-tier if the proje
 | Branches | `main` + `dev` still created | same | same; optional `epic/*` for multi-story features |
 
 Rules of thumb:
+- Scale agents to the story, not the project: S = 1 builder, M = 2 competing builders, L = split into slices (see `subagents.md`). Tier sets the ceiling.
 - Dual builders cost ~2–3× tokens per module. Use them when the module has real design choices (data model, auth, sync), not for mechanical work.
 - The review pass (§4) is cheap and catches expensive mistakes — keep it for anything that touches users, money or third-party data, whatever the tier.
 - The Resume protocol and "user merges every PR" gate apply at every tier.

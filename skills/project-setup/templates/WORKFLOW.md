@@ -39,6 +39,9 @@ Custom subagents in `.claude/agents/`. None get `AskUserQuestion`/`Agent` — if
 
 _Right-size note: record the chosen tier in DECISIONS. Smaller tiers use one builder instead of two._
 
+### Scaling agents to story size
+Size each story when dispatching (or via `Size:` in its roadmap row): **S** → 1 builder + tester + verifier; **M** → the standard pipeline above; **L** (>~8 files, spans layers, or >~600 changed lines) → split into 2–5 **slices** with disjoint file ownership. Write the slicing plan and a shared **slice contract** (interfaces/types/endpoints) first on `module/<id>-int`; one builder per slice on `module/<id>-s<k>`; tester(s) from the spec only; the orchestrator merges slices into `module/<id>-int`, then `module-verifier` runs on the integrated branch; one PR, user-approved. Cap ~6 agents in parallel. A slice that needs a file outside its scope stops and reports so the orchestrator re-slices. Details: plugin `references/subagents.md`.
+
 ## Known issues
 - **`isolation: "worktree"` pins to the session's primary working directory**, not the target repo. In a multi-repo project, run `cd "<repo>" && git status` right before dispatching and confirm the primary directory flipped; keep batches per-repo. Fallback: `git worktree add -b module/<id>-a .worktrees/<id>-a dev` manually and tell each subagent to `cd` there.
 - **Custom agent types may not be selectable by name** — fall back to `general-purpose` with the agent file's role inlined in the prompt.
