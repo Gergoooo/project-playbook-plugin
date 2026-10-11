@@ -36,7 +36,8 @@ Start with `references/adapt.md` (fit the scaffold to the project type) and `ref
 ## Templates (`templates/`)
 - Docs: `README.md`, `ARCHITECTURE.md`, `API.md`*, `DATA_MODEL.md`*, `ROADMAP.md`, `DECISIONS.md`, `TESTING.md`, `WORKFLOW.md`, `ATTRIBUTIONS.md`*, `DEPLOYMENT.md`*, `features/` (*conditional on project type)
 - `CLAUDE.md` — repo CLAUDE.md with the Resume protocol block
+- `github/pull_request_template.md`, `github/playbook-checks.yml` (CI enforcement)
 - `githooks/pre-push`, `githooks/pre-commit`, `gitleaks.toml`, `gitignore.base`, `github-workflows/ci.yml`
 - `agents/module-builder.md`, `module-tester.md` (instantiate per stack), `module-verifier.md`
 
-Replace every `<placeholder>` when copying. Commands: `/project-playbook:new-project [--auto]` scaffolds; `/project-playbook:resume` reports status; `/project-playbook:next-epic [N]` runs the epic completion gate (`scripts/epic-gate.py`).
+Replace every `<placeholder>` when copying. Commands: `/project-playbook:new-project [--auto]` scaffolds; `/project-playbook:resume` reports status; `/project-playbook:next-epic [N]` runs the epic completion gate (`scripts/epic-gate.py`); `/project-playbook:adopt` retrofits an existing repo; `/project-playbook:start-module <id>` runs the per-module pipeline; `/project-playbook:retro [N]` records an epic retrospective.

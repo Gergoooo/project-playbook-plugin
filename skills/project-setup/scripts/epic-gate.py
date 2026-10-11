@@ -62,7 +62,7 @@ def check(ph):
     for f in ph["features"]:
         fp = os.path.join(os.path.dirname(rp), "features", f)
         t = read(fp)
-        if t and not re.search(r"(?i)\*\*Status\*\*:\s*(done|complete|shipped)", t):
+        if t and not re.search(r"(?i)\*{0,2}Status\*{0,2}:\s*\*{0,2}\s*(done|complete|shipped)", t):
             miss.append(f"feature doc not marked Done: features/{f}")
     for b in branches:
         for sid in ids:

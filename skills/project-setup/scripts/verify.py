@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Self-verification for a scaffolded project. Usage: verify.py <root> --expect a,b,c (add tier:solo for solo tier)
+"""Self-verification for a scaffolded project. Usage: verify.py <root> --expect a,b,c [--ci  (skip local-only checks: hooksPath, branches)] (add tier:solo for solo tier)
 Root may be one repo or a folder holding several repos. Prints JSON {items:[{name,weight,pass,detail}], score}."""
 import json, os, re, subprocess, sys
 
@@ -82,8 +82,8 @@ per_repo("gitignore", 1, lambda r: os.path.isfile(f"{r}/.gitignore"))
 per_repo("hooks:pre-push-exec", 1, lambda r: os.access(f"{r}/.githooks/pre-push", os.X_OK))
 per_repo("hooks:pre-commit-exec", 1, lambda r: os.access(f"{r}/.githooks/pre-commit", os.X_OK))
 per_repo("hooks:gitleaks.toml", 0.5, lambda r: os.path.isfile(f"{r}/.gitleaks.toml"))
-per_repo("hooks:core.hooksPath", 1, lambda r: git(r, "config", "core.hooksPath").strip() == ".githooks")
-per_repo("git:main+dev", 1, lambda r: {"main", "dev"} <= set(b.strip("* ").strip() for b in git(r, "branch", "--list").split("\n") if b.strip()))
+if "--ci" not in sys.argv: per_repo("hooks:core.hooksPath", 1, lambda r: git(r, "config", "core.hooksPath").strip() == ".githooks")
+if "--ci" not in sys.argv: per_repo("git:main+dev", 1, lambda r: {"main", "dev"} <= set(b.strip("* ").strip() for b in git(r, "branch", "--list").split("\n") if b.strip()))
 per_repo("git:has-commit", 0.5, lambda r: bool(git(r, "log", "-1", "--format=%H").strip()))
 if "ci" in expect: per_repo("ci:workflow", 1, lambda r: os.path.isdir(f"{r}/.github/workflows") and bool(os.listdir(f"{r}/.github/workflows")))
 if "tier:solo" not in expect:
