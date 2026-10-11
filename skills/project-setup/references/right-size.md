@@ -15,7 +15,7 @@ Pick a tier at step 0 and record it in `docs/DECISIONS.md`. Re-tier if the proje
 | `features/` | none (features live in README) | one doc per major feature (≤6) | one per feature |
 | Phases / modules | 1–2 phases, ≤8 modules | 3–5 phases, ≤30 modules | as needed, group-sized |
 | Agents | none (single builder, orchestrator tests) | builder + tester + verifier, one builder pass | dual builders + tester + verifier |
-| Branches | `main` + `dev` still created | same | same |
+| Branches | `main` + `dev` still created | same | same; optional `epic/*` for multi-story features |
 
 Rules of thumb:
 - Dual builders cost ~2–3× tokens per module. Use them when the module has real design choices (data model, auth, sync), not for mechanical work.

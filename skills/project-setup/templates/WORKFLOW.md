@@ -13,8 +13,9 @@ How each phase in [ROADMAP.md](ROADMAP.md) gets built.
 ## Branching model
 - **`dev`** — integration branch; every module PR merges here.
 - **`main`** — stable/deployed; advances only via a deliberate `dev`→`main` promotion PR, decided independently of any module. Publish/deploy workflows trigger on `main` only.
-- **Module branches** — `module/<id>-a`, `module/<id>-b`, `module/<id>-tests`, forked from `dev`, deleted after merge.
-- No direct pushes to `main`/`dev` — enforced by the local `pre-push` hook (see `CLAUDE.md`) when GitHub branch protection is unavailable.
+- **Module branches** — `module/<id>-a`, `module/<id>-b`, `module/<id>-tests`, forked from `dev` (or from the epic branch), deleted after merge.
+- **Epic branches (optional, Full tier)** — `epic/<name>`, forked from `dev` for a phase whose stories aren't usable until all land. Story PRs merge into the epic branch (user approves each); one final `epic/<name>` → `dev` PR (user approves) when the epic's test plan is green. Merge `dev` into the epic branch regularly. Phases using one are marked `Epic branch: epic/<name>` in ROADMAP. Terms: epic = one feature/phase; story = one roadmap row inside it.
+- No direct pushes to `main`, `dev` or `epic/*` — enforced by the local `pre-push` hook (see `CLAUDE.md`) when GitHub branch protection is unavailable.
 
 ## Module entry format
 **Scope** (files/dirs owned) · **Depends on** · **Group** · **Test plan** · **Status**.

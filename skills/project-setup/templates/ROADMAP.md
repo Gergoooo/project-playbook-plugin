@@ -4,7 +4,7 @@ Living checklist, split into parallel-safe modules — see [WORKFLOW.md](WORKFLO
 
 ## Current status
 - **Last merged:** <module id + PR link, or "none yet">
-- **In flight:** <module / branch / PR, or "none">
+- **In flight:** <module / branch / PR, or "none"> (if epics are used: active epic branch + which stories are merged into it)
 - **Next up:** <module, Group, blockers / open decisions>
 
 > Update this block in every module PR.
@@ -30,6 +30,7 @@ _Feature doc: n/a_
 |---|---|---|---|
 
 ## Phase 1 — <first user-visible capability>
+<!-- Optional (Full tier): Epic branch: epic/<name> -->
 _Feature doc: [<feature>.md](features/<feature>.md)_
 
 ### Group A

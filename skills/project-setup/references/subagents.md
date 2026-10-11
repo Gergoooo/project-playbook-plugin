@@ -20,7 +20,7 @@ Define these as `.claude/agents/*.md` files (frontmatter: `name`/`description`/`
    - None of the three open a PR. They push their branch and report back.
 2. **Synthesis** (done by the orchestrating conversation, not delegated): read both builders' diffs and rationale, apply the tester's suite to each candidate, and pick a winner or merge the stronger parts of both into a fresh branch. State the reasoning — this is a real editorial call, not a mechanical vote.
 3. **Dispatch `module-verifier`** against the synthesized branch for an independent test re-run with real command output, not a paraphrase.
-4. **Present to the user**: both candidates' key differences, the synthesis reasoning, the verifier's results. Open the one PR into `dev` at this point — the user's review/merge of *that* PR is the actual decision gate.
+4. **Present to the user**: both candidates' key differences, the synthesis reasoning, the verifier's results. Open the one PR into `dev` (or into the epic branch when the phase uses one — see branching.md) at this point — the user's review/merge of *that* PR is the actual decision gate.
 
 Document this whole flow in `docs/WORKFLOW.md` so a future session (after `/clear`/`/compact`, or a fresh window) can pick it back up without re-deriving it.
 

@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
-# Blocks direct pushes to main and dev. Modules land on dev via PR;
+# Blocks direct pushes to main, dev and epic/* branches. Modules land on dev via PR;
 # dev is promoted to main via its own separate PR. See docs/WORKFLOW.md.
 set -uo pipefail
 
 while read -r local_ref local_sha remote_ref remote_sha; do
-  if [ "$remote_ref" = "refs/heads/main" ] || [ "$remote_ref" = "refs/heads/dev" ]; then
+  case "$remote_ref" in refs/heads/main|refs/heads/dev|refs/heads/epic/*) protected=1 ;; *) protected=0 ;; esac
+  if [ "$protected" = "1" ]; then
     if [ "${ALLOW_MAIN_PUSH:-}" != "1" ]; then
       branch_name="${remote_ref#refs/heads/}"
       echo "" >&2
       echo "Blocked: direct push to $branch_name." >&2
       echo "This repo's workflow is branch + PR + user-approved merge (see docs/WORKFLOW.md)." >&2
-      echo "Modules target dev; dev is promoted to main via its own PR." >&2
+      echo "Modules target dev (or their epic/* branch); dev is promoted to main via its own PR." >&2
       echo "Push a feature branch and open a PR instead:" >&2
       echo "  git push origin HEAD:refs/heads/<branch-name>" >&2
       echo "  gh pr create --base dev" >&2

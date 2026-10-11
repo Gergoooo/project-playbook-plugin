@@ -9,7 +9,7 @@
 ## Standing rules
 - **User decides at every module/phase boundary.** Never auto-proceed past one without explicit sign-off.
 - **Ask before adding anything to `.gitignore`** that isn't obviously build-noise — secret-related patterns need explicit confirmation.
-- Do not push directly to `main` or `dev`. Modules → PR into `dev`; `dev` → `main` only via a deliberate promotion PR.
+- Do not push directly to `main`, `dev` or `epic/*`. Modules → PR into `dev` (or into their `epic/<name>` branch if the roadmap phase names one; the epic → `dev` PR is a separate approval); `dev` → `main` only via a deliberate promotion PR.
 
 ## Stack
 <stack and one-line rationale; details in docs/DECISIONS.md>
