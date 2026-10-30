@@ -1,0 +1,50 @@
+name: Deploy
+# CD step 2: roll the published image out to a host over SSH, smoke-test it,
+# and roll back to the previous image if the check fails. Manual trigger by
+# default — promote to automatic (workflow_run after Publish) only when you trust the smoke test.
+# Secrets live in GitHub encrypted secrets / an environment, never in the repo:
+#   DEPLOY_HOST, DEPLOY_USER, DEPLOY_SSH_KEY, plus any app secrets written to the host .env at deploy time.
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: Image tag to deploy (default latest)
+        default: latest
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production   # add required reviewers in repo settings when the plan allows
+    steps:
+      - name: Prepare SSH
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_deploy && chmod 600 ~/.ssh/id_deploy
+          ssh-keyscan -H "${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/known_hosts
+      - name: Deploy, smoke-test, roll back on failure
+        env:
+          TAG: ${{ inputs.image_tag }}
+        run: |
+          ssh -i ~/.ssh/id_deploy "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" "TAG='$TAG' bash -s" <<'REMOTE'
+          set -euo pipefail
+          cd /opt/app                       # <- project path on the host
+          prev=$(cat .deployed_tag 2>/dev/null || echo latest)
+          echo "$TAG" > .deployed_tag.next
+          IMAGE_TAG="$TAG" docker compose pull
+          IMAGE_TAG="$TAG" docker compose up -d
+          sleep 10
+          if curl -fsS http://localhost:8000/health >/dev/null; then   # <- smoke test
+            mv .deployed_tag.next .deployed_tag; echo "deployed $TAG"
+          else
+            echo "smoke test failed, rolling back to $prev" >&2
+            IMAGE_TAG="$prev" docker compose up -d; exit 1
+          fi
+          REMOTE

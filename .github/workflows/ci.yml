@@ -1,0 +1,29 @@
+name: Plugin CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: plugin-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install linters
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck && bash <(curl -fsSL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash) && sudo mv actionlint /usr/local/bin/
+      - name: Git identity for fixture repos
+        run: git config --global user.email ci@example.com && git config --global user.name ci
+      - name: Tests (scripts, hook, templates, manifests)
+        run: python -m unittest discover -s tests -v

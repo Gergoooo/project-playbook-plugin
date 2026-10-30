@@ -98,5 +98,26 @@ if "tier:solo" not in expect:
     add("agents:verifier", 1, any("verifier" in n for n in names))
     add("agents:no-placeholders", 1, names and all(not re.search(r"<stack>", read(f"{r}/{n}")) for r, v in allagents.items() for n in v))
 
+# --- CI/CD workflow quality ---
+def wf_files(r):
+    d = f"{r}/.github/workflows"
+    return [os.path.join(d, f) for f in sorted(os.listdir(d)) if f.endswith((".yml", ".yaml"))] if os.path.isdir(d) else []
+if "ci" in expect:
+    allwf = [f for r in R for f in wf_files(r)]
+    texts = {f: read(f) for f in allwf}
+    add("cicd:no-stub-steps", 2, bool(texts) and not any(re.search(r"TODO replace|replace with the real|<setup-|<install deps>", t) for t in texts.values()), "CI must run real commands")
+    ci_files = [t for f, t in texts.items() if re.search(r"(?m)^name:\s*(iOS )?CI\b", t)]
+    add("cicd:ci-covers-epic-branches", 1, bool(ci_files) and all(("epic/**" in t or "phase/**" in t or "'**'" in t) for t in ci_files) if "epics" in expect else True, "ci.yml must trigger on epic/** PRs when epics are used")
+    add("cicd:least-privilege", 1, all(re.search(r"(?m)^permissions:", t) for t in texts.values()) if texts else False, "every workflow declares permissions")
+    add("cicd:timeouts", 0.5, all("timeout-minutes" in t for t in texts.values()) if texts else False)
+    pub = [t for t in texts.values() if re.search(r"(?m)^name:\s*(Publish|Deploy|Release)", t)]
+    add("cicd:publish-only-from-main", 1, all(("branches: [main]" in t or "branches:\n      - main" in t or "tags:" in t or "workflow_dispatch" in t) and "pull_request" not in t.split("jobs:")[0] for t in pub) if pub else True)
+    add("cicd:publish-needs-tests", 1, all(re.search(r"needs:\s*\[?test|workflow_run|uses:\s*\./\.github/workflows/ci", t) or "workflow_dispatch" in t for t in pub) if pub else True)
+    try:
+        r = subprocess.run(["actionlint"] + allwf, capture_output=True, text=True, timeout=60)
+        add("cicd:actionlint", 1, r.returncode == 0, r.stdout[:200]) if allwf else None
+    except FileNotFoundError:
+        pass  # actionlint not installed: skipped, not failed
+
 tot = sum(i["weight"] for i in items); got = sum(i["weight"] for i in items if i["pass"])
 print(json.dumps({"root": root, "repos": R, "score": round(got / tot, 4), "items": items}, indent=1))

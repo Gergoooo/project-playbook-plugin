@@ -1,0 +1,10 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: { interval: weekly }
+  # Add the project's ecosystem(s): npm | pip | gomod | cargo | gradle | docker | terraform | swift
+  - package-ecosystem: <ecosystem>
+    directory: /
+    schedule: { interval: weekly }
+    open-pull-requests-limit: 5

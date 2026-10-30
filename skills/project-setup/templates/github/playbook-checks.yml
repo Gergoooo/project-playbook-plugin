@@ -1,11 +1,20 @@
 name: Playbook checks
 # Enforces what hooks only advise: status updated, scaffold intact, no secrets.
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: playbook-checks-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 on:
   pull_request:
     branches: [dev, main, 'epic/**']
 jobs:
   checks:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with: { fetch-depth: 0 }
@@ -17,7 +26,7 @@ jobs:
             echo "$changed" | grep -qE '^docs/ROADMAP.md$' || { echo "::error::Code changed but docs/ROADMAP.md (Current status / story ✅) was not updated"; exit 1; }
           fi
       - name: Scaffold intact
-        run: python3 scripts/verify.py . --ci --expect "${PLAYBOOK_EXPECT:-ci}" | python3 -c "import json,sys; d=json.load(sys.stdin); bad=[i['name'] for i in d['items'] if not i['pass']]; print('score',d['score'],'failing',bad); sys.exit(1 if d['score']<0.9 else 0)"
+        run: python3 scripts/verify.py . --ci --expect "$(cat scripts/playbook-expect.txt 2>/dev/null || echo ci)" | python3 -c "import json,sys; d=json.load(sys.stdin); bad=[i['name'] for i in d['items'] if not i['pass']]; print('score',d['score'],'failing',bad); sys.exit(1 if d['score']<0.9 else 0)"
       - name: Secret scan
         uses: gitleaks/gitleaks-action@v2
         env:

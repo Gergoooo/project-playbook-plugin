@@ -24,7 +24,7 @@ Repo count: one deployable → one repo; client and server that release separate
 
 ## 3. Stack-specific pieces (generate, don't copy)
 - **Builder/tester agents**: instantiate `templates/agents/module-builder.md` and `module-tester.md` once per stack/repo, replacing `<stack>`, the skills list, and the runner's collect-only command. Always add `module-verifier`.
-- **CI** (`templates/github-workflows/ci.yml`): fill in the real toolchain; macOS runner for Apple builds.
+- **CI/CD** (`references/cicd.md`): pick `ci-<stack>.yml`, replace every command with the real one; add publish/deploy/release/dependabot only when they apply.
 - **`.gitignore`**: build-noise for the stack added freely; secret patterns proposed and confirmed.
 - **TESTING.md**: keep only test types that apply; name real commands.
 - **Phase 0 modules**: skeleton/shell, CI, and (if hosted) hosting + secrets + auth gate — before any feature phase.

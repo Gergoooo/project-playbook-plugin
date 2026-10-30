@@ -1,0 +1,38 @@
+name: CI
+# Stack template (Swift / Apple platforms). Replace project, scheme and test command.
+on:
+  pull_request:
+    branches: [dev, main, "epic/**", "phase/**"]
+  workflow_call: {}
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+      - name: Resolve an available iPhone simulator
+        id: sim
+        run: |
+          set -euo pipefail
+          NAME=$(xcrun simctl list devices available -j | /usr/bin/python3 -c 'import json,sys; ds=[d["name"] for rt,l in json.load(sys.stdin)["devices"].items() if "iOS" in rt for d in l if d.get("isAvailable") and "iPhone" in d.get("name","")]; print(ds[-1] if ds else sys.exit(1))')
+          echo "name=$NAME" >> "$GITHUB_OUTPUT"
+      - name: Build and test
+        run: |
+          set -o pipefail
+          xcodebuild test -project App.xcodeproj -scheme App \
+            -destination "platform=iOS Simulator,name=${{ steps.sim.outputs.name }}" | tee test.log
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with: { name: xcodebuild-log, path: test.log, retention-days: 5 }

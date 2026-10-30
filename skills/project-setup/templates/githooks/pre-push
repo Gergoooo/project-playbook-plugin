@@ -3,6 +3,7 @@
 # dev is promoted to main via its own separate PR. See docs/WORKFLOW.md.
 set -uo pipefail
 
+# shellcheck disable=SC2034  # git passes 4 fields on stdin; only remote_ref is used
 while read -r local_ref local_sha remote_ref remote_sha; do
   case "$remote_ref" in refs/heads/main|refs/heads/dev|refs/heads/epic/*) protected=1 ;; *) protected=0 ;; esac
   if [ "$protected" = "1" ]; then
