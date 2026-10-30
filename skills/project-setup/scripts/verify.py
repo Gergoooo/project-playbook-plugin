@@ -11,7 +11,7 @@ if "--expect" in sys.argv:
 def repos():
     out = []
     for dp, dn, fn in os.walk(root):
-        dn[:] = [d for d in dn if d not in ("node_modules", ".venv", "venv", "__pycache__")]
+        dn[:] = [d for d in dn if d not in ("node_modules", ".venv", "venv", "__pycache__", "worktrees", ".worktrees")]
         if ".git" in dn or ".git" in fn:
             out.append(dp)
             dn[:] = [d for d in dn if d != ".git"]
@@ -104,7 +104,7 @@ def wf_files(r):
     return [os.path.join(d, f) for f in sorted(os.listdir(d)) if f.endswith((".yml", ".yaml"))] if os.path.isdir(d) else []
 if "ci" in expect:
     allwf = [f for r in R for f in wf_files(r)]
-    texts = {f: read(f) for f in allwf}
+    texts = {f: re.sub(r"(?m)^\s*#.*$", "", read(f)) for f in allwf}
     add("cicd:no-stub-steps", 2, bool(texts) and not any(re.search(r"TODO replace|replace with the real|<setup-|<install deps>", t) for t in texts.values()), "CI must run real commands")
     ci_files = [t for f, t in texts.items() if re.search(r"(?m)^name:\s*(iOS )?CI\b", t)]
     add("cicd:ci-covers-epic-branches", 1, bool(ci_files) and all(("epic/**" in t or "phase/**" in t or "'**'" in t) for t in ci_files) if "epics" in expect else True, "ci.yml must trigger on epic/** PRs when epics are used")
