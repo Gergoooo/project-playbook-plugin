@@ -10,7 +10,7 @@ IDEA=$(awk 'BEGIN{n=0} /^---$/{n++; next} n>=2' "$BRIEF")
 EXPECT=$(sed -n 's/^expect: \[\(.*\)\]/\1/p' "$BRIEF" | tr -d ' ')
 TIER=$(sed -n 's/^tier: *//p' "$BRIEF")
 [ "$TIER" = "solo" ] && EXPECT="$EXPECT,tier:solo"
-cd "$OUT/gen"
+cd "$OUT/gen" || exit 1
 claude --plugin-dir "$PLUGIN" -p "/project-playbook:new-project $IDEA --auto" \
   --allowedTools "Read" "Write" "Edit" "Glob" "Grep" "Bash(git:*)" "Bash(mkdir:*)" "Bash(chmod:*)" "Bash(cp:*)" "Bash(ls:*)" "Bash(cat:*)" "Bash(sed:*)" "Bash(touch:*)" "Bash(mv:*)" "Bash(rm:*)" "Bash(test:*)" "Bash(printf:*)" "Bash(echo:*)" "Bash(find:*)" "Bash(wc:*)" "Bash(head:*)" "Bash(tail:*)" \
   > "$OUT/transcript.txt" 2>&1

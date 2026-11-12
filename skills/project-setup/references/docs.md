@@ -10,6 +10,7 @@ Write these before any application code exists, in the actual repo(s):
 - `docs/DECISIONS.md` — lightweight ADR log: one entry per non-obvious choice, **Context / Decision / Why**, newest first, plus an **Open questions** section for things not yet decided
 - `docs/TESTING.md` — test types, tooling, when each runs in CI
 - `docs/features/` — one file per feature, linked from a `README.md` index and from `ROADMAP.md`'s phases
+- `docs/THREAT_MODEL.md` — if networked, handling user data/money/credentials, or running untrusted input (see step 4)
 - `docs/ATTRIBUTIONS.md` — if using any third-party data/content under a license requiring credit (CC BY, CC BY-SA, etc.) — check this explicitly, don't assume "free" means "no attribution needed"
 
 Why: keeps the plan concrete, reviewable, and durable independent of implementation — and gives something concrete to build against instead of discovering the shape of things ad hoc.

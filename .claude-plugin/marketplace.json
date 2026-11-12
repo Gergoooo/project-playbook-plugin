@@ -6,7 +6,11 @@
     {
       "name": "project-playbook",
       "source": "./",
-      "description": "Docs-first project setup playbook with scaffold + resume commands."
+      "description": "Docs-first project setup playbook: scaffold, adopt, resume, per-module agent pipeline, epic gate, retro.",
+      "version": "0.2.0",
+      "license": "MIT",
+      "category": "workflow",
+      "keywords": ["workflow", "scaffold", "docs-first", "subagents", "github", "ci"]
     }
   ]
 }

@@ -19,11 +19,11 @@ The templates are a superset. Fit them to the project — don't emit docs that h
 Repo count: one deployable → one repo; client and server that release separately → two. Ask when unclear.
 
 ## 2. Conditional docs
-- `API.md` — only with a service/library/CLI contract. `DATA_MODEL.md` — only if data persists. `DEPLOYMENT.md` — only if hosted. `ATTRIBUTIONS.md` — only if third-party data/content/assets need credit.
+- `API.md` — only with a service/library/CLI contract. `DATA_MODEL.md` — only if data persists. `DEPLOYMENT.md` — only if hosted. `ATTRIBUTIONS.md` — only if third-party data/content/assets need credit. `THREAT_MODEL.md` — only if networked / user data / money / untrusted input. `LICENSE` — per the license decision (`licensing.md`). `SECURITY.md`, `CONTRIBUTING.md`, `CODEOWNERS`, issue templates — public or multi-contributor repos only.
 - `features/` — one file per feature; skip for tier "Solo script".
 
 ## 3. Stack-specific pieces (generate, don't copy)
-- **Builder/tester agents**: instantiate `templates/agents/module-builder.md` and `module-tester.md` once per stack/repo, replacing `<stack>`, the skills list, and the runner's collect-only command. Always add `module-verifier`.
+- **Builder/tester agents**: instantiate `templates/agents/module-builder.md` and `module-tester.md` once per stack/repo, replacing `<stack>`, the skills list, and the runner's collect-only command. Always add `module-verifier` (copy the template into `.claude/agents/`; the plugin also ships it as `project-playbook:module-verifier` for sessions where the copy is missing).
 - **CI/CD** (`references/cicd.md`): pick `ci-<stack>.yml`, replace every command with the real one; add publish/deploy/release/dependabot only when they apply.
 - **`.gitignore`**: build-noise for the stack added freely; secret patterns proposed and confirmed.
 - **TESTING.md**: keep only test types that apply; name real commands.
