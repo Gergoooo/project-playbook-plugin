@@ -1,6 +1,7 @@
 ## 2. Repo setup
 
 - Decide monorepo vs polyrepo based on how independently the pieces deploy/release (e.g. a client and a backend that release separately → separate repos; one deployable → one repo).
+- License file per `licensing.md` (fetch text with `gh api licenses/<spdx>`), if the decision is to have one.
 - `git init`, set local `user.name`/`user.email` if not already configured globally — prefer a GitHub noreply email (`<id>+<username>@users.noreply.github.com`) over a personal email, even for private repos.
 - Check `gh auth status`; if not authenticated, have the user run `gh auth login` themselves (browser-based OAuth) rather than pasting a token into chat. Follow with `gh auth setup-git` so pushes don't hit credential prompts.
 - `gh repo create <name> --private --source=. --remote=origin --push` per repo.

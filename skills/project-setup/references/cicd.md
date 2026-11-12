@@ -17,7 +17,7 @@ Goal: every PR is checked by real commands; nothing reaches `main` untested; pub
 - `permissions:` declared per workflow (read-only by default; widen per job), `timeout-minutes` on every job, `concurrency` to cancel superseded runs, dependency caching on.
 - Lint + type-check + tests run in CI; if the project has no linter yet, add one in Phase 0 rather than leaving the gate empty. Never leave a placeholder step — `verify.py` fails scaffolds that do.
 - Publish/deploy trigger on `main` only (or manual), never on PRs or `dev`, and depend on green tests (`needs: test` / reusable CI). Deploy keeps secrets in GitHub encrypted secrets or an environment, writes the host `.env` at deploy time, runs a smoke test, and rolls back on failure.
-- Pin third-party actions to a commit SHA before the repo goes public; Dependabot keeps them updated. Prefer OIDC to cloud providers over static keys.
+- Pin third-party actions to a commit SHA before the repo goes public (resolve with `gh api repos/<owner>/<action>/git/ref/tags/<tag> --jq .object.sha`, keep the tag in a trailing comment); Dependabot keeps them updated. This plugin's own CI is pinned that way. Prefer OIDC to cloud providers over static keys.
 - Lint every workflow with `actionlint` before committing (`verify.py` runs it when installed).
 
 ## Limits to state in DECISIONS

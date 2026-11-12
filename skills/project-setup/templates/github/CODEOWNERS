@@ -1,0 +1,6 @@
+# Review ownership. With branch protection ("Require review from Code Owners") this makes the
+# maintainer's approval the real merge gate; without it, it still auto-requests the review.
+* @<github-username>
+/.github/ @<github-username>
+/.githooks/ @<github-username>
+/docs/DECISIONS.md @<github-username>

@@ -1,6 +1,10 @@
 {
   "name": "project-playbook",
   "description": "Docs-first project setup playbook: scoping, docs, repo hygiene, module/PR pipeline with dual builders, and a Resume protocol so a fresh session knows where you left off.",
-  "version": "0.1.0",
-  "author": { "name": "Gergoooo", "url": "https://github.com/Gergoooo" }
+  "version": "0.2.0",
+  "author": { "name": "Gergoooo", "url": "https://github.com/Gergoooo" },
+  "homepage": "https://github.com/Gergoooo/project-playbook-plugin",
+  "repository": "https://github.com/Gergoooo/project-playbook-plugin",
+  "license": "MIT",
+  "keywords": ["workflow", "scaffold", "docs-first", "subagents", "github", "ci", "project-setup"]
 }

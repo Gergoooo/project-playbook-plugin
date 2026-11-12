@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Self-verification for a scaffolded project. Usage: verify.py <root> --expect a,b,c [--ci  (skip local-only checks: hooksPath, branches)] (add tier:solo for solo tier)
+"""Self-verification for a scaffolded project. Usage: verify.py <root> --expect a,b,c (keys: api,data_model,attributions,deployment,features,ci,epics,license,community,threat_model) [--ci  (skip local-only checks: hooksPath, branches)] (add tier:solo for solo tier)
 Root may be one repo or a folder holding several repos. Prints JSON {items:[{name,weight,pass,detail}], score}."""
 import json, os, re, subprocess, sys
 
@@ -46,6 +46,9 @@ for doc, w in [("README.md", 1), ("ARCHITECTURE.md", 1), ("ROADMAP.md", 2), ("DE
 for doc, key in [("API.md", "api"), ("DATA_MODEL.md", "data_model"), ("ATTRIBUTIONS.md", "attributions"), ("DEPLOYMENT.md", "deployment")]:
     if key in expect: add(f"doc:{doc}", 1, find_doc(doc) is not None)
     else: add(f"no-filler:{doc}", 0.5, True if find_doc(doc) is None else len(read(find_doc(doc)).strip()) > 400, "present docs must be real")
+if "threat_model" in expect:
+    tp = find_doc("THREAT_MODEL.md")
+    add("doc:THREAT_MODEL.md", 1, tp is not None and len(read(tp).strip()) > 400 and not re.search(r"<(what|endpoint|e\.g\.|each)[^>]*>", read(tp)), "must be real, no template markers")
 if "features" in expect:
     fd = None
     for r in R:
@@ -78,6 +81,13 @@ add("decisions:open-questions", 1, re.search(r"(?mi)^##\s*Open questions", dd) i
 # --- per-repo hygiene ---
 per_repo("claude-md:resume-protocol", 2, lambda r: "On session start" in read(f"{r}/CLAUDE.md") and "ROADMAP" in read(f"{r}/CLAUDE.md"))
 per_repo("claude-md:no-placeholders", 1, lambda r: os.path.isfile(f"{r}/CLAUDE.md") and not re.search(r"<(stack|stack and one-line|project)[^>]*>", read(f"{r}/CLAUDE.md")))
+if "license" in expect:
+    per_repo("license:file", 1, lambda r: any(os.path.isfile(f"{r}/{n}") and len(read(f"{r}/{n}")) > 200 for n in ("LICENSE", "LICENSE.md", "LICENSE.txt", "COPYING")))
+if "community" in expect:
+    def community(r):
+        ok = all(os.path.isfile(f"{r}/{p}") and not re.search(r"<(github-username|security contact|N|owner)>", read(f"{r}/{p}")) for p in ("SECURITY.md", "CONTRIBUTING.md", ".github/CODEOWNERS"))
+        return ok and os.path.isdir(f"{r}/.github/ISSUE_TEMPLATE")
+    per_repo("community:files", 1, community)
 per_repo("gitignore", 1, lambda r: os.path.isfile(f"{r}/.gitignore"))
 per_repo("hooks:pre-push-exec", 1, lambda r: os.access(f"{r}/.githooks/pre-push", os.X_OK))
 per_repo("hooks:pre-commit-exec", 1, lambda r: os.access(f"{r}/.githooks/pre-commit", os.X_OK))

@@ -6,7 +6,7 @@ argument-hint: "<module id, e.g. 1.4>"
 Run the playbook's per-module pipeline for module $ARGUMENTS. Read `docs/WORKFLOW.md`, `CLAUDE.md`, and the module's ROADMAP row first. You are the orchestrator; the user is the only decision-maker.
 
 ## 0. Preconditions (stop and report if any fails)
-- Run `python3 scripts/epic-gate.py . --start <epic of this module>` — if earlier epics are incomplete, show the warning + missing list and stop (only the user can override).
+- Run `python3 "${CLAUDE_PLUGIN_ROOT}/skills/project-setup/scripts/epic-gate.py" . --start <epic of this module>` — if earlier epics are incomplete, show the warning + missing list and stop (only the user can override).
 - The module's `Depends on` are all ✅ and merged. Working tree clean, on `dev` (or the epic branch if the phase has `Epic branch:`), up to date. `core.hooksPath` set.
 - Run a Bash command with `cwd` in the target repo before dispatching (worktree gotcha, see WORKFLOW "Known issues").
 
